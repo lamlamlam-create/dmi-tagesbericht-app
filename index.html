@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>DMI Tagesbericht</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">D</span><span>DMI</span></div>
+      <nav>
+        <button class="nav-item active" data-view="dashboard"><span>Übersicht</span></button>
+        <button class="nav-item" data-view="entry"><span>Tagesbericht</span></button>
+        <button class="nav-item" data-view="history"><span>Verlauf</span></button>
+      </nav>
+      <div class="side-bottom">
+        <span id="sync-state" class="sync-state">Lokal gespeichert</span>
+        <button id="settings-button" class="text-button">Synchronisation</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button id="mobile-menu" class="icon-button mobile-only" aria-label="Menü">☰</button>
+        <div><p class="eyebrow">Tagesproduktion</p><h1 id="page-title">Übersicht</h1></div>
+        <div class="top-actions"><span id="today-label"></span><button id="new-entry" class="primary-button">+ Eintrag erfassen</button></div>
+      </header>
+
+      <section id="dashboard" class="view active">
+        <div class="hero"><div><p class="eyebrow">Jahresziel 2026</p><h2 id="year-progress">0 %</h2><p id="year-detail">0 von 1.370.001 Stück</p></div><div class="progress-ring"><span id="ring-value">0%</span></div></div>
+        <div class="kpi-grid">
+          <article class="kpi-card"><p>Heute gesamt</p><strong id="kpi-today">0</strong><span>Stück</span></article>
+          <article class="kpi-card"><p>Tagesziel</p><strong id="kpi-target">5.807</strong><span>Stück · Bonus 2,0</span></article>
+          <article class="kpi-card"><p>Abweichung</p><strong id="kpi-diff">−5.807</strong><span id="diff-label">zum Ziel</span></article>
+          <article class="kpi-card"><p>Rest bis Jahresziel</p><strong id="kpi-rest">1.370.001</strong><span>Stück</span></article>
+        </div>
+        <section class="panel"><div class="panel-header"><div><h3>Standorte heute</h3><p>Erfasste Stückzahlen nach Standort</p></div><button class="text-button" data-go="entry">Bearbeiten</button></div><div id="location-bars" class="location-bars"></div></section>
+        <section class="two-columns"><article class="panel"><div class="panel-header"><div><h3>Bonus-Prognose</h3><p id="bonus-text">Für die aktuelle Leistung</p></div></div><div class="bonus-scale"><div data-bonus="1.2"><b>1,2</b><span>750 Stück/h</span></div><div data-bonus="2"><b>2,0</b><span>801 Stück/h</span></div><div data-bonus="2.3"><b>2,3</b><span>851 Stück/h</span></div><div data-bonus="2.6"><b>2,6</b><span>951 Stück/h</span></div></div></article><article class="panel"><div class="panel-header"><div><h3>Letzte Einträge</h3><p>Zuletzt erfasste Tage</p></div></div><div id="recent-list" class="recent-list"></div></article></section>
+      </section>
+
+      <section id="entry" class="view">
+        <div class="form-intro"><div><p class="eyebrow">Schnelleingabe</p><h2>Tagesbericht erfassen</h2><p>Die Werte werden automatisch summiert und für die Bonus-Prognose ausgewertet.</p></div><span id="entry-date-badge" class="date-badge"></span></div>
+        <form id="entry-form" class="entry-form">
+          <label>Datum<input id="report-date" type="date" required /></label>
+          <label>Arbeitszeit (Stunden)<input id="work-hours" type="number" min="0" max="24" step="0.25" value="7.25" required /></label>
+          <div class="form-section"><h3>Stückzahl je Standort</h3><div class="locations-inputs">
+            <label>Rummelsbg<input class="location-input" data-location="Rummelsbg" type="number" min="0" value="0" inputmode="numeric" /></label>
+            <label>Hof<input class="location-input" data-location="Hof" type="number" min="0" value="0" inputmode="numeric" /></label>
+            <label>München<input class="location-input" data-location="München" type="number" min="0" value="0" inputmode="numeric" /></label>
+            <label>Pegnitz<input class="location-input" data-location="Pegnitz" type="number" min="0" value="0" inputmode="numeric" /></label>
+            <label>Pegnitz 008<input class="location-input" data-location="Pegnitz 008" type="number" min="0" value="0" inputmode="numeric" /></label>
+            <label>Cham<input class="location-input" data-location="Cham" type="number" min="0" value="0" inputmode="numeric" /></label>
+          </div></div>
+          <div class="live-total"><span>Gesamtstückzahl</span><strong id="form-total">0</strong><span id="form-evaluation">0 Stück/h · Ziel noch nicht erreicht</span></div>
+          <label class="full-width">Notiz (optional)<textarea id="note" rows="3" placeholder="z. B. Besonderheiten oder Ausfallzeiten"></textarea></label>
+          <div class="form-actions"><button type="button" id="cancel-entry" class="secondary-button">Abbrechen</button><button class="primary-button" type="submit">Tagesbericht speichern</button></div>
+        </form>
+      </section>
+
+      <section id="history" class="view"><div class="panel"><div class="panel-header"><div><p class="eyebrow">Alle Daten</p><h2>Verlauf</h2></div><button id="export-csv" class="secondary-button">CSV exportieren</button></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Arbeitszeit</th><th>Gesamt</th><th>Stück/h</th><th>Bonus</th><th></th></tr></thead><tbody id="history-body"></tbody></table></div></div></section>
+    </main>
+  </div>
+  <dialog id="settings-dialog"><form method="dialog" class="settings"><button class="dialog-close" value="cancel">×</button><p class="eyebrow">Cloud-Synchronisation</p><h2>PC und Handy verbinden</h2><p>Die App funktioniert offline. Für die gemeinsame Nutzung auf mehreren Geräten wird ein kostenloses Supabase-Projekt verwendet.</p><label>Supabase Projekt-URL<input id="supabase-url" placeholder="https://…supabase.co" /></label><label>Anon-Key<input id="supabase-key" placeholder="eyJ…" /></label><p class="hint">Danach den Inhalt von <code>supabase-setup.sql</code> im SQL-Editor des Projekts ausführen.</p><div class="form-actions"><button id="disconnect" type="button" class="secondary-button">Verbindung trennen</button><button id="save-settings" value="default" class="primary-button">Verbinden & synchronisieren</button></div></form></dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
